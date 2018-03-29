@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>binary search</title>
+</head>
+<body>
+<form id="sInput">
+    输入查询数组：<br/>
+    <input type="text" name="v" value="1,3,4,6,7,8,10,11,12,15">
+    <br/>
+    输入需要查询的数字:
+    <br/>
+    <input type="text" name="f" value="3">
+</form>
+<button id="submit">submit</button>
+<script src="lib/jquery-1.9.1.js"></script>
+<script>
+    $('#submit').click(()=>{
+        var numArr = [], find, left, right, mid, res=false;
+
+    $('#sInput input').each(function () {
+
+        numArr[this.name] = this.value
+    })
+    find = parseInt(numArr['f'])
+    numArr = numArr['v'].split(",").map((el)=> parseInt(el)
+    )
+    ;
+    console.log(find, numArr)
+    mid = Math.floor((numArr.length-1) / 2);
+    left = 0;
+    right = numArr.length - 1;
+    while (left <=right) {
+        midNum = numArr[mid]
+        if (midNum == find) {
+            res = mid+1
+            break;
+        }
+        else if (midNum > find) {
+            right = mid - 1;
+
+            mid = Math.floor((right + left) / 2)
+        } else if (midNum < find) {
+            left = mid + 1;
+            mid = Math.floor((right + left) / 2)
+        }
+    }
+    console.log(res)
+
+
+    })
+    //给定查询元素x，求出序列中第一个大于等于x的元素的位置L以及第一个大于x的元素的位置R
+    //这样元素x在序列中的存在区间就是[L，R)
+    //第一步实现左边的闭区间L
+    //第二步实现右边开区间R
+    function lowerBound(arr,left,right,x){
+        var mid
+        while(left<right){//left<right而非left<=right的原因是由问题决定的
+            mid=Math.floor((left+right)/2)
+            if(arr[mid]>=x){
+                right=mid;
+            }else{
+                left=mid+1;
+            }
+        }
+        return left;
+    }
+    function upperBound(arr,left,right,x){
+        var mid
+        while(left<right){
+            mid = Math.floor((left+right)/2);
+            if(arr[mid]>x){//和lowerBound的差别就在少一个=，其它都一样
+                right=mid;
+            }else{
+                left=mid+1;
+            }
+        }
+        return left;
+    }
+    //由lowerBound和upperBound引出了二分的经典应用场景，寻找有序序列中第一个满足某条件的元素的位置
+    //下面给出解决该问题的通用模板
+</script>
+</body>
+</html>

@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+<h1>计算出售月饼最大收益</h1>
+<form id="cake">
+    品种及需求<br/>
+    <input type="text" name="v" value="3,20">
+    <br>
+    数量 <br/>
+    <input type="text" name="q" value="18,15,10">
+    <br>
+    价格 <br/>
+    <input type="text" name="p" value="75,72,45">
+
+</form>
+<button id="submit">submit</button>
+<h1>组个最小数</h1>
+<form id="group">
+    <input type="text" name="num" value="2200030010">
+</form>
+<button id="gSubmit">submit</button>
+<script src="lib/jquery-1.9.1.js"></script>
+<script>
+    //moon cake
+    var inputArr = {}, priceArr = []
+    $('#submit').click(function () {
+        $("#cake input").each(function () {
+            inputArr[this.name] = this.value.split(',');
+            //console.log(inputArr)
+
+        });
+        var num = parseInt(inputArr['v'][0]), need = parseInt(inputArr['v'][1]);
+        for (i = 0; i < num; i++) {
+            priceArr[i] = {
+                store: parseInt(inputArr['q'][i]),
+                sell: parseInt(inputArr['p'][i]),
+                price: parseFloat(inputArr['p'][i] / inputArr['q'][i])
+            }
+        }
+
+        priceArr.sort(function (a, b) {
+            if (a.price < b.price) return 1;//排序，若返回小于0，则a在b前，返回大于0的数则b在a前，等于0则不变
+        })
+        $("#submit").after("<div>" + sellP(priceArr, need) + "</div>");
+
+
+    })
+
+    function sellP(priceArr, need) {
+        var len = priceArr.length, res = 0;
+        for (var i = 0; i < len; i++) {
+            if (priceArr[i].store <= need) {
+                need -= priceArr[i].store;
+                res += priceArr[i].sell;
+            } else if (priceArr[i].store > need) {
+                res += need * priceArr[i].price;
+                break;
+            }
+        }
+        return res;
+    }
+
+    //group number
+    $("#gSubmit").click(function () {
+        var getNum = $("#group input").val(), numGroup = [], noZero = [],zero;
+        numGroup = getNum.split("");
+        numGroup = numGroup.map(function (el,index) {
+             el = parseInt(el)
+            if(el!=0&&index!=0){
+                 for(var i=0;i<el;i++)
+                 this.push(index)
+
+            }
+            return el;
+
+        },noZero)
+
+        zero = numGroup[0]
+        noZero.sort(function (a, b) {
+            if (a > b) return 1
+        })
+        for(var i=0;i<zero;i++){
+            noZero.splice(1,0,0)
+        }
+        $("#gSubmit").after("<div>" + noZero.join("") + "</div>");
+   console.log(numGroup,noZero);
+    })
+</script>
+</body>
+</html>
