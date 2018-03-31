@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="doc">
+    <input type="file" id="file" accept="*/*" multiple="multiple">
+    <span class="sub">提交</span>
+</div>
+<script src="lib/jquery-1.9.1.js"></script>
+<script>
+
+    $(function () {
+        $(".sub").on("click", function () {
+            var file = document.getElementById("file");
+            var formdata = new FormData();
+            formdata.append("file", file.files[0]);
+            console.table(formdata.get('file'));
+            $.ajax({
+                type: "post",
+                url: 'http://172.18.136.156:8082/ssm/wechat/file',
+                // dataType: "json",
+                data: formdata,
+                cache:false,
+                contentType: false,
+                processData: false,
+                success: function (data) {
+
+                },
+                error: function () {
+
+                }
+            })
+
+        })
+    })
+</script>
+
+</body>
+</html>
