@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>merge</title>
+</head>
+<body>
+<script>
+    function merge(arr, l1, r1, l2,r2) {
+        let tmp=[],index=0;
+        let i=l1,j=l2;
+        while(i<=r1&&j<=r2){
+            if(arr[i]<arr[j]){
+                tmp[index++]=arr[i++];
+            }else{
+                tmp[index++]=arr[j++]
+            }
+        }
+        while(i<=r1){tmp[index++]=arr[i++]}
+        while(j<=r2){tmp[index++]=arr[j++]}
+        for(let h=0;h<index;h++){
+            arr[l1+h]=tmp[h]
+        }
+    }
+
+    function mergeSort(arr, left, right) {
+        if (left < right) {
+            var mid = Math.floor((left + right) / 2);
+            mergeSort(arr,left,mid);
+            mergeSort(arr,mid+1,right);
+            merge(arr,left,mid,mid+1,right);
+
+        }
+    }
+
+    var arr = [0, 2, 6, 8,3,5,7,94,234,3456,232,89,7,6]
+    mergeSort(arr, 0, arr.length-1)
+    console.log(arr)
+</script>
+</body>
+</html>
