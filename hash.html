@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>hash</title>
+</head>
+<body>
+<script>
+    class HashTable {
+        constructor() {
+            this.table = {'3212':{'ddd':'ddd','ee':'2312'}};//测试递归是否正常
+        }
+
+        _hashFunc(key) {
+            let id = 0, len, arr = [];
+            len = key.length;
+            arr = key.split("");
+            for (let i = 0; i < len; i++) {
+                id += arr[i].charCodeAt();//str.charCodeAt(index)用于获取字符的ascii码
+            }
+            return id%57;//找一个素数用来限制数组大小
+        }
+        insert(key,value){
+            if(typeof key !='object'){//可以只接受一个对象
+                let id = this._hashFunc(key);
+                if(!this.table[id]){
+                    this.table[id]={};
+                }
+                if(!this.table[id][key]){
+                    this.table[id][key]=value;
+                }
+            }else{
+                for(let i in key){
+                    this.insert(i,key[i])
+                }
+            }
+
+        }
+        search(key){
+            let id = this._hashFunc(key);
+            if(!this.table[id] || !this.table[id][key]) return null;
+            return this.table[id][key];
+        }
+        delete(key){
+            let id = this._hashFunc(key);
+            if(this.table[id])
+                if(this.table[id][key])
+                   return delete this.table[id][key]
+        }
+        print(table=this.table){//递归输出hashtable的值
+            if(typeof table=='object'){
+                for(let key in table){
+                    this.print(table[key])
+                    if(typeof table[key]!='object')
+                    console.log(key,'+',table[key])
+                }
+            }
+
+        }
+    }
+    let hash = new HashTable()
+    hash.insert({'abc':'ddd@qq.com','bac':'33@qq.com','ddic':'2343@gmail.com'});
+    hash.print();
+    console.warn('delete abc')
+    hash.delete('abc');
+    hash.print();
+    console.log(hash.search('bac'))
+</script>
+</body>
+</html>
