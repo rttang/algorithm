@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>recursion</title>
+</head>
+<body>
+<div id="dd"><b>hello</b>world
+    <div><p id="paragraph" style="color: green;">Sample Paragraph</p>
+        <form action="">
+            <p>
+                <input type="button" value="显示第一个属性及其值"
+                       onclick="showFirstAttr();">
+                <input id="result" type="text" value="">
+            </p>
+    </div>
+</div>
+<script>
+    function F(n=3) {
+        if (n == 0) return 1;
+        else return F(n - 1) * n;
+    }
+
+    //console.log(F())
+    var tmp = {}
+
+    function Fib(n=4) {
+
+        if (n == 0 || n == 1) return 1;
+        else {
+            if (!tmp[n]) return tmp[n] = Fib(n - 1) + Fib(n - 2);
+            else return tmp[n];
+
+        }
+    }
+
+    // console.log(Fib())
+    function Per(n, s='ASC') {//n表示输出n的全排，s是字符串，ASC表示正序，DESC表示倒序
+        let ht = new Array(n).fill(false);
+        let p = new Array(n);
+        let index = 1;
+        if (s == 'DESC') index = n;
+        return (function innerP(index, s) {
+            if (s == 'ASC') {
+                if (index == n + 1) {
+                    for (let i = 0; i < n; i++) {
+                        console.log(p[i])
+                    }
+                    for (let i = n; i > 0; i--) {
+                        console.log(p[i - 1])
+                    }
+                    console.log("\n")
+                    return;
+                }
+                for (let x = 0; x < n; x++) {
+                    if (!ht[x]) {
+                        ht[x] = true;//注意每次递归时ht数组每项的变化，每递归一次多一项被设为true，
+                        p[index - 1] = x + 1;//本次循环中index-1是一个定值
+                        innerP(index + 1, s);
+                        ht[x] = false;
+                    }
+                }
+            } else {
+                if (index == 0) {
+                    for (let i = n; i > 0; i--) {
+                        console.log(p[i - 1])
+                    }
+                    console.log("\n")
+                    return;
+                }
+                for (let x = n; x > 0; x--) {
+                    if (!ht[x - 1]) {
+                        ht[x - 1] = true;
+                        p[index - 1] = x;
+                        innerP(index - 1, s);
+                        ht[x - 1] = false;
+                    }
+                }
+            }
+
+
+        }(index, s))
+
+    }
+
+    // Per(3)
+    //Per(3,'DESC')
+    function permutation(n) {
+        let flag = new Array(n + 1).fill(false);
+        let save = new Array(n + 1).fill(0);
+        let index = 1;
+        return (function innerPer(index) {
+            if (index == n + 1) {
+                for (let i = 1; i <= n; i++) {
+                    console.log(save[i]);
+                }
+                console.log('\n')
+                return;
+            }
+            for (let x = 1; x <= n; x++) {
+                if (!flag[x]) {
+                    flag[x] = true;//每向下递归一次，进入if的次数少一
+                    save[index] = x;//index在每层循环过程中是不变的
+                    innerPer(index + 1);//仅在递归时发生变化
+                    flag[x] = false;//递归结束还原状态
+                }
+            }
+        })(index)
+    }
+
+    // permutation(3);
+    function Queen(n) {
+        let flag = new Array(n + 1).fill(false);
+        let save = new Array(n + 1).fill(0);
+        let index = 1;
+        let cnt = 0;
+
+        return (function innerQ(index) {
+            if (index == n + 1) {
+                let judge = true;
+                for (let i = 1; i <= n; i++) {
+                    for (let j = i + 1; j <= n; j++) {
+                        if (Math.abs(i - j) == Math.abs(save[i] - save[j])) {
+                            judge = false;
+                        }
+                    }
+                }
+                if (judge) {
+                    console.log(save, ++cnt);
+                    console.log('\n');
+
+                }
+                return;
+            }
+            for (let x = 1; x <= n; x++) {
+                if (!flag[x]) {
+                    flag[x] = true;
+                    save[index] = x;
+                    innerQ(index + 1);
+                    flag[x] = false;
+                }
+            }
+        })(index)
+
+    }
+
+    //  Queen(8)
+
+    function ReQueen(n) {
+        let flag = new Array(n + 1).fill(false);
+        let save = new Array(n + 1).fill(0);
+        let index = 1;
+        let cnt = 0;
+
+        return (function innerQ(index) {
+            if (index == n + 1) {
+                console.log(save, ++cnt);
+                return;
+            }
+            for (let x = 1; x <= n; x++) {
+                if (!flag[x]) {
+                    let judge = true;
+                    for (let pre = 1; pre < index; pre++) {
+                        if (Math.abs(pre - index) == Math.abs(save[pre] - x)) {
+                            judge = false;
+                            break;
+                        }
+                    }
+                    if (judge) {
+                        flag[x] = true;
+                        save[index] = x;
+                        innerQ(index + 1);
+                        flag[x] = false;
+                    }
+                }
+            }
+        })(index)
+    }
+
+    // ReQueen(8)
+    function GetText(elem) {
+        var text = "";
+        var length = elem.childNodes.length;
+        for (let i = 0; i < length; i++) {
+            var cur = elem.childNodes[i];
+            if (cur.nodeType === 3)
+                text += cur.nodeValue;//遇到文本节点就保存
+            else if (cur.nodeType === 1)
+                text += GetText(cur);//遇到元素节点就进行递归
+        }
+        return text;
+    }
+
+    //console.log(GetText(document.getElementById('dd')))
+    function cycle(arr, num=3) {
+        if (num == 0) {
+            return [];
+        }
+        else {
+            return arr.concat(cycle(arr, num - 1));
+        }
+    }
+
+   // console.log(cycle([1, 2, 3]))
+
+    function WalkDom(node, func) {
+        func(node);
+        node = node.firstChild;
+        while (node) {
+            WalkDom(node, func);
+            node = node.nextSibling;
+        }
+    }
+
+    function getElementByAttr(attr, value ,node=document.body) {
+        let res = [];
+        WalkDom(node, function (node) {
+            let actual = node.nodeType == 1 && node.getAttribute(attr);
+            if (typeof actual == 'string' && (actual === value || typeof value != 'string')) {
+                res.push(node);
+            }
+        })
+        return res;
+    }
+
+    //console.log(getElementByAttr('type',null,document.getElementById('dd')))
+    var a=[1,2,3],b=a,c=[];//把a直接赋值给b的这种情况就是浅复制
+    b.pop();//修改b的同时a也被改变了
+    console.log(a);//输出[1,2]
+    a.forEach(function(elem,index){
+        c[index]=elem
+    })
+    c.push(4)//修改c，不影响a
+    console.log(a,c)
+
+    function DeepClone(obj){
+        if(!obj||typeof obj!=='object')
+            return obj;
+        var tmp =new obj.constructor();
+        for(let key in obj){
+            tmp[key]=DeepClone(obj[key])
+        }
+        return tmp
+    }
+   var cc=[[1,2,4],{'dd':123}],bb=DeepClone(cc)
+    console.log(bb.pop(),cc)
+</script>
+</body>
+</html>
